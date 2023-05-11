@@ -3,6 +3,13 @@ from tkinter import filedialog
 import pandas as pd
 
 pairs = []
+names1 = []
+lons1 = []
+lats1 = []
+names2 = []
+lons2 = []
+lats2 = []
+precision = None
 
 # UI Headline
 
@@ -21,10 +28,9 @@ def load_file1():
     file_1 = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsx"),))
     file1 = pd.read_excel(file_1)
     for index, row in file1.iterrows():
-        global name1, lon1, lat1
-        name1 = row['Name']
-        lon1 = row['Longitude']
-        lat1 = row['Latitude']
+        names1.append(row['Name'])
+        lons1.append(row['Longitude'])
+        lats1.append(row['Latitude'])
 
 
 file1_button = tk.Button(root, text="open", command=load_file1)
@@ -40,10 +46,9 @@ def load_file2():
     file_2 = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsx"),))
     file2 = pd.read_excel(file_2)
     for index, row in file2.iterrows():
-        global name2, lon2, lat2
-        name2 = row['Name']
-        lon2 = row['Longitude']
-        lat2 = row['Latitude']
+        names2.append(row['Name'])
+        lons2.append(row['Longitude'])
+        lats2.append(row['Latitude'])
 
 
 file2_button = tk.Button(root, text="open", command=load_file2)
@@ -53,16 +58,51 @@ file2_button.grid(row=2, column=1, padx=10, pady=10)
 
 precision_label = tk.Label(root, text="3. Provide number of digits precision:")
 precision_label.grid(row=3, column=0, padx=10, pady=10)
-precision = tk.Entry(root)
-precision.grid(row=3, column=1, padx=10, pady=10)
 
+
+def check_precision():
+    value = entry.get()
+    try:
+        value = int(value)
+        if isinstance(value, int):
+            error_message = tk.Label(root, text="Precison updated")  # is an int
+            error_message.grid(row=3, column=4, padx=10, pady=10)
+            update_precision()
+        else:
+            error_message = tk.Label(root, text="Must be an int!!")  # not an int
+            error_message.grid(row=3, column=4, padx=10, pady=10)
+    except ValueError:
+        error_message = tk.Label(root, text="Must must be a num!!")  # not a number
+        error_message.grid(row=3, column=4, padx=10, pady=10)
+
+
+def update_precision():
+    precision = entry.get()
+
+
+entry = tk.Entry(root)
+entry.grid(row=3, column=1, padx=10, pady=10)
+entry_button = tk.Button(root, text='Update', command=check_precision)
+entry_button.grid(row=3, column=2, padx=10, pady=10)
 
 # Compare
 
-if round(lon1, precision.get()) == round(lon2, precision.get()) and \
-        round(lat1, precision.get()) == round(lat2, precision.get()):
-    pairs.append((name1, name2))
+for i in lons1:
+    round(i, precision)
+for i in lons2:
+    round(i, precision)
+for i in lats1:
+    round(i, precision)
+for i in lats2:
+    round(i, precision)
+
+for i in names1:
+    if lons1 == lons2 and lats1 == lats2:
+        pairs.append((names1, names2))
+
 df = pd.DataFrame(pairs)
+
+
 # UI generate file
 
 safe_label = tk.Label(root, text="4. Generate output file:")
