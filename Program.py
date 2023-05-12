@@ -31,6 +31,8 @@ def load_file1():
         names1.append(row['Name'])
         lons1.append(row['Longitude'])
         lats1.append(row['Latitude'])
+    ok_message = tk.Label(root, text="OK")
+    ok_message.grid(row=1, column=4, padx=10, pady=10)
 
 
 file1_button = tk.Button(root, text="open", command=load_file1)
@@ -49,6 +51,8 @@ def load_file2():
         names2.append(row['Name'])
         lons2.append(row['Longitude'])
         lats2.append(row['Latitude'])
+    ok_message = tk.Label(root, text="OK")
+    ok_message.grid(row=2, column=4, padx=10, pady=10)
 
 
 file2_button = tk.Button(root, text="open", command=load_file2)
@@ -56,7 +60,7 @@ file2_button.grid(row=2, column=1, padx=10, pady=10)
 
 # UI input Precision
 
-precision_label = tk.Label(root, text="3. Provide number of digits precision:")
+precision_label = tk.Label(root, text="3. Provide digits precision:")
 precision_label.grid(row=3, column=0, padx=10, pady=10)
 
 
@@ -65,14 +69,14 @@ def check_precision():
     try:
         value = int(value)
         if isinstance(value, int):
-            error_message = tk.Label(root, text="Precison updated")  # is an int
-            error_message.grid(row=3, column=4, padx=10, pady=10)
+            ok_message = tk.Label(root, text="OK")  # is an int
+            ok_message.grid(row=3, column=4, padx=10, pady=10)
             update_precision()
         else:
-            error_message = tk.Label(root, text="Must be an int!!")  # not an int
+            error_message = tk.Label(root, text="!!!")  # not an int
             error_message.grid(row=3, column=4, padx=10, pady=10)
     except ValueError:
-        error_message = tk.Label(root, text="Must must be a num!!")  # not a number
+        error_message = tk.Label(root, text="!!!")  # not a number
         error_message.grid(row=3, column=4, padx=10, pady=10)
 
 
@@ -112,10 +116,23 @@ safe_label.grid(row=4, column=0, padx=10, pady=10)
 def save_output_file():
     file_path = filedialog.asksaveasfilename(defaultextension="*.xlsx", filetypes=(("Excel files", "*.xlsx"),))
     df.to_excel(file_path, index=False)
+    ok_message = tk.Label(root, text="OK")
+    ok_message.grid(row=4, column=4, padx=10, pady=10)
 
 
 safe_button = tk.Button(root, text="Generate", command=save_output_file)
 safe_button.grid(row=4, column=1, padx=10, pady=10)
 
+
+# exit program
+def exit_prog():
+    root.destroy()
+
+
+safe_button = tk.Button(root, text="Exit", command=exit_prog)
+safe_button.grid(row=5, column=4, padx=10, pady=10)
+
+
 # UI mainloop
+
 root.mainloop()
