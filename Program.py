@@ -4,17 +4,18 @@ import pandas as pd
 
 pairs = []
 names1 = []
-lons1 = []
+longs1 = []
 lats1 = []
 names2 = []
-lons2 = []
+longs2 = []
 lats2 = []
 precision = None
+dtypes = {'Name': str, 'Longitude': float, 'Latitude': float}
 
 # UI Headline
 
 root = tk.Tk()
-root.title('My application')
+root.title('Coordinates duplicate search')
 headline_name = tk.Label(root, text='Search for potential duplicates of facilities by comparing coordinates')
 headline_name.grid(row=0, column=0, padx=10, pady=10)
 
@@ -26,10 +27,10 @@ file1_dialog.grid(row=1, column=0, padx=10, pady=10)
 
 def load_file1():
     file_1 = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsx"),))
-    file1 = pd.read_excel(file_1)
+    file1 = pd.read_excel(file_1, dtype=dtypes)
     for index, row in file1.iterrows():
         names1.append(row['Name'])
-        lons1.append(row['Longitude'])
+        longs1.append(row['Longitude'])
         lats1.append(row['Latitude'])
     ok_message = tk.Label(root, text="OK")
     ok_message.grid(row=1, column=4, padx=10, pady=10)
@@ -46,10 +47,10 @@ file2_dialog.grid(row=2, column=0, padx=10, pady=10)
 
 def load_file2():
     file_2 = filedialog.askopenfilename(filetypes=(("Excel files", "*.xlsx"),))
-    file2 = pd.read_excel(file_2)
+    file2 = pd.read_excel(file_2, dtype=dtypes)
     for index, row in file2.iterrows():
         names2.append(row['Name'])
-        lons2.append(row['Longitude'])
+        longs2.append(row['Longitude'])
         lats2.append(row['Latitude'])
     ok_message = tk.Label(root, text="OK")
     ok_message.grid(row=2, column=4, padx=10, pady=10)
@@ -91,9 +92,9 @@ entry_button.grid(row=3, column=2, padx=10, pady=10)
 
 # Compare
 
-for i in lons1:
+for i in longs1:
     round(i, precision)
-for i in lons2:
+for i in longs2:
     round(i, precision)
 for i in lats1:
     round(i, precision)
@@ -101,7 +102,7 @@ for i in lats2:
     round(i, precision)
 
 for i in names1:
-    if lons1 == lons2 and lats1 == lats2:
+    if longs1 == longs2 and lats1 == lats2:
         pairs.append((names1, names2))
 
 df = pd.DataFrame(pairs)
@@ -125,11 +126,11 @@ safe_button.grid(row=4, column=1, padx=10, pady=10)
 
 
 # exit program
-def exit_prog():
+def exit_program():
     root.destroy()
 
 
-safe_button = tk.Button(root, text="Exit", command=exit_prog)
+safe_button = tk.Button(root, text="Exit", command=exit_program)
 safe_button.grid(row=5, column=4, padx=10, pady=10)
 
 

@@ -3,7 +3,9 @@
 import pandas as pd
 from random import uniform
 from random_words import RandomWords
-file_length = 1000
+
+
+file_length = 1000  # ile objektow wygenerowac
 names = []
 latitudes = []
 longitudes = []
